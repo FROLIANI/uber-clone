@@ -11,9 +11,23 @@ import {
   extendTheme,
   VStack,
   Box,
+  View,
 } from "native-base";
 import NativeBaseIcon from "./components/NativeBaseIcon";
 import { Platform } from "react-native";
+import { Provider } from 'react-redux'
+import { StyleSheet } from "react-native";
+import { store } from "./Store";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+// import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+   
+
+import HomeScreen from "./Screens/HomeScreen";
+import MapScreen from "./Screens/MapScreen";
+
+
 
 // Define the config
 const config = {
@@ -25,61 +39,51 @@ const config = {
 export const theme = extendTheme({ config });
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
+
   return (
-    <NativeBaseProvider>
-      <Center
-        _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "blueGray.50" }}
-        px={4}
-        flex={1}
-      >
-        <VStack space={5} alignItems="center">
-          <NativeBaseIcon />
-          <Heading size="lg">Welcome to NativeBase</Heading>
-          <HStack space={2} alignItems="center">
-            <Text>Edit</Text>
-            <Box
-              _web={{
-                _text: {
-                  fontFamily: "monospace",
-                  fontSize: "sm",
-                },
+    <NativeBaseProvider store={store}>
+
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <Stack.Navigator>
+
+            <Stack.Screen name="HomeScreen"
+              component={HomeScreen}
+              options={{
+                headerShown: false,
               }}
-              px={2}
-              py={1}
-              _dark={{ bg: "blueGray.800" }}
-              _light={{ bg: "blueGray.200" }}
-            >
-              App.js
-            </Box>
-            <Text>and save to reload.</Text>
-          </HStack>
-          <Link href="https://docs.nativebase.io" isExternal>
-            <Text color="primary.500" underline fontSize={"xl"}>
-              Learn NativeBase
-            </Text>
-          </Link>
-          <ToggleDarkMode />
-        </VStack>
-      </Center>
+            />
+
+            <Stack.Screen name="MapScreen"
+              component={MapScreen}
+              options={{
+                headerShown: false,       
+              }}
+            />
+
+          </Stack.Navigator>
+        </SafeAreaProvider>
+      </NavigationContainer>
+
     </NativeBaseProvider>
   );
 }
 
-// Color Switch Component
-function ToggleDarkMode() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  return (
-    <HStack space={2} alignItems="center">
-      <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === "light"}
-        onToggle={toggleColorMode}
-        aria-label={
-          colorMode === "light" ? "switch to dark mode" : "switch to light mode"
-        }
-      />
-      <Text>Light</Text>
-    </HStack>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+});
+
+
+
+
+
